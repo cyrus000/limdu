@@ -296,13 +296,13 @@ EnhancedClassifier.prototype = {
 			if (featureLookupTable)
 				featureLookupTable.addFeatures(features);
 			datum.input = features;
-      datum.input = this.compressData(datum.input);
 			return datum;
 		}, this);
 		dataset.forEach(function(datum) {
 			this.editFeatureValues(datum.input, /*remove_unknown_features=*/false);
 			if (featureLookupTable)
 				datum.input = featureLookupTable.hashToArray(datum.input);
+      datum.input = this.compressData(datum.input);
 		}, this);
 
 
