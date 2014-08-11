@@ -296,6 +296,7 @@ EnhancedClassifier.prototype = {
 			if (featureLookupTable)
 				featureLookupTable.addFeatures(features);
 			datum.input = features;
+      datum.input = this.compressData(datum.input);
 			return datum;
 		}, this);
 		dataset.forEach(function(datum) {
@@ -308,6 +309,30 @@ EnhancedClassifier.prototype = {
 
 		this.classifier.trainBatch(dataset);
 	},
+  compressData: function (dat) {
+    var last = dat[0];
+    var count = 1;
+    var data = [];
+    for (var x = 1; x < dat.length; x++) {
+      if (last === dat[x]) {
+        count++;
+
+      } else {
+        var obj = {};
+        obj[last] = count;
+        data.push(obj);
+        count = 1;
+        last = dat[x];
+      }
+    }
+
+    if (count > 1) {
+      var obj = {};
+      obj[last] = count;
+      data.push(obj);
+    }
+    return data;
+  },
 
 	/**
 	 * internal function - classify a single segment of the input (used mainly when there is an inputSplitter) 

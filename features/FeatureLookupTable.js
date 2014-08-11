@@ -56,7 +56,6 @@ FeatureLookupTable.prototype = {
 	 * @note some code borrowed from Heather Arthur: https://github.com/harthur/brain/blob/master/lib/lookup.js
 	 */
 	hashToArray: function(hash) {
-		this.addFeatures(hash);
 		var array = [];
 		for (var featureIndex=0; featureIndex<this.featureIndexToFeatureName.length; ++featureIndex)
 			array[featureIndex]=0;

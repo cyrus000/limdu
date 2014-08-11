@@ -31,6 +31,7 @@ exports.toSvmLight = function(dataset, bias, binarize, firstFeatureNumber) {
  * convert an array of features to a single line in SVM-light format. The line starts with a space.
  */
 function featureArrayToFeatureString(features, bias, firstFeatureNumber) {
+  features = decompress(features);
 	if (!Array.isArray(features))
 		throw new Error("Expected an array, but got "+JSON.stringify(features))
 	var line = (bias? " "+firstFeatureNumber+":"+bias: "");
@@ -40,4 +41,25 @@ function featureArrayToFeatureString(features, bias, firstFeatureNumber) {
 			line += (" "+(feature+firstFeatureNumber+(bias?1:0))+":"+value.toPrecision(5));
 	}
 	return line;
+}
+
+/**
+ * Modification from the limdu package
+ * takes compressed format [{<value of the feature>: <number of times in a row it is present},{..}]
+ *
+ * @param dat
+ * @returns {Array}
+ */
+function decompress(dat) {
+  var data = [];
+  for (var i = 0; i < dat.length; i++) {
+    var key = Object.keys(dat[i])[0];
+    var count = dat[i][key];
+
+    for (var x = 0; x < count; x++) {
+      data.push(parseInt(key));
+    }
+
+  }
+  return data;
 }
