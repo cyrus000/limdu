@@ -2,7 +2,7 @@ var ftrs = require('../features');
 var _ = require('underscore')._;
 var hash = require('../utils/hash');
 var util = require('../utils/bars');
-
+var async = require('async');
 var multilabelutils = require('./multilabel/multilabelutils');
 
 
@@ -272,7 +272,7 @@ EnhancedClassifier.prototype = {
 					}, this)
 				}, this);
 			}, this)
-		
+
 			this.Observable = Observable;
 			// }
 
@@ -298,13 +298,14 @@ EnhancedClassifier.prototype = {
 			datum.input = features;
 			return datum;
 		}, this);
-		dataset.forEach(function(datum) {
-			this.editFeatureValues(datum.input, /*remove_unknown_features=*/false);
-			if (featureLookupTable)
-				datum.input = featureLookupTable.hashToArray(datum.input);
-      datum.input = this.compressData(datum.input);
-		}, this);
 
+    async.eachSeries(dataset, function(datum, callback) {
+      this.editFeatureValues(datum.input, /*remove_unknown_features=*/false);
+      if (featureLookupTable)
+        datum.input = featureLookupTable.hashToArray(datum.input);
+      datum.input = this.compressData(datum.input);
+      callback();
+    }, this);
 
 
 		this.classifier.trainBatch(dataset);
