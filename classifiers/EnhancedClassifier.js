@@ -239,76 +239,78 @@ EnhancedClassifier.prototype = {
 	 * @param dataset an array with objects of the format: {input: sample1, output: [class11, class12...]}
 	 */
 	trainBatch: function(dataset) {
-		var featureLookupTable = this.featureLookupTable;
-		var pastTrainingSamples = this.pastTrainingSamples;
-		
-		// if (typeof this.InputSplitLabel === 'function') {
-		// dataset = dataset.map(function(datum) {
-		// 	var normalizedLabels = multilabelutils.normalizeOutputLabels(datum.output);
-		// 	process.exit(0)
-		// 	return {
-		// 		input: datum.input,
-		// 		output: (this.InputSplitLabel(normalizedLabels))
-		// 	}
-		// }, this);
-		// }
-			Observable = {}
+    setTimeout(function(){
+      var featureLookupTable = this.featureLookupTable;
+      var pastTrainingSamples = this.pastTrainingSamples;
 
-			// if (this.classifier.setObservable)
-				// {
-				_.each(dataset, function(datum, key, list){
-				_.each(multilabelutils.normalizeOutputLabels(datum.output), function(label, key, list){
-					_.each(this.splitJson(label), function(element, key, list){
-						if (key==0)
-							if (!(element in Observable))
-									Observable[element] = {}
-						if (key==1)
-							if (!(element in Observable[list[key-1]]))
-									Observable[list[key-1]][element] = {}
-						if (key==2)
-							if (!(element in Observable[list[key-2]][list[key-1]]))
-									Observable[list[key-2]][list[key-1]][element] = {}
+      // if (typeof this.InputSplitLabel === 'function') {
+      // dataset = dataset.map(function(datum) {
+      // 	var normalizedLabels = multilabelutils.normalizeOutputLabels(datum.output);
+      // 	process.exit(0)
+      // 	return {
+      // 		input: datum.input,
+      // 		output: (this.InputSplitLabel(normalizedLabels))
+      // 	}
+      // }, this);
+      // }
+      Observable = {}
 
-					}, this)
-				}, this);
-			}, this)
+      // if (this.classifier.setObservable)
+      // {
+      _.each(dataset, function(datum, key, list){
+        _.each(multilabelutils.normalizeOutputLabels(datum.output), function(label, key, list){
+          _.each(this.splitJson(label), function(element, key, list){
+            if (key==0)
+              if (!(element in Observable))
+                Observable[element] = {}
+            if (key==1)
+              if (!(element in Observable[list[key-1]]))
+                Observable[list[key-1]][element] = {}
+            if (key==2)
+              if (!(element in Observable[list[key-2]][list[key-1]]))
+                Observable[list[key-2]][list[key-1]][element] = {}
 
-			this.Observable = Observable;
-			// }
+          }, this)
+        }, this);
+      }, this)
 
-			dataset = dataset.map(function(datum) {
+      this.Observable = Observable;
+      // }
 
-			if (typeof this.InputSplitLabel === 'function') {
-				datum.output = (this.InputSplitLabel(multilabelutils.normalizeOutputLabels(datum.output)))	
-			}
-			else
-			{
-				datum.output = normalizeClasses(datum.output, this.labelLookupTable);
-			}
+      dataset = dataset.map(function(datum) {
 
-			if (pastTrainingSamples && dataset!=pastTrainingSamples)
-				pastTrainingSamples.push(datum);
-			datum = _(datum).clone();
-			datum.input = this.normalizedSample(datum.input);
-			var features = this.sampleToFeatures(datum.input, this.featureExtractors);
-			this.countFeatures(features);
-			this.trainSpellChecker(features);
-			if (featureLookupTable)
-				featureLookupTable.addFeatures(features);
-			datum.input = features;
-			return datum;
-		}, this);
+        if (typeof this.InputSplitLabel === 'function') {
+          datum.output = (this.InputSplitLabel(multilabelutils.normalizeOutputLabels(datum.output)))
+        }
+        else
+        {
+          datum.output = normalizeClasses(datum.output, this.labelLookupTable);
+        }
 
-    async.eachSeries(dataset, function(datum, callback) {
-      this.editFeatureValues(datum.input, /*remove_unknown_features=*/false);
-      if (featureLookupTable)
-        datum.input = featureLookupTable.hashToArray(datum.input);
-      datum.input = this.compressData(datum.input);
-      callback();
-    }, this);
+        if (pastTrainingSamples && dataset!=pastTrainingSamples)
+          pastTrainingSamples.push(datum);
+        datum = _(datum).clone();
+        datum.input = this.normalizedSample(datum.input);
+        var features = this.sampleToFeatures(datum.input, this.featureExtractors);
+        this.countFeatures(features);
+        this.trainSpellChecker(features);
+        if (featureLookupTable)
+          featureLookupTable.addFeatures(features);
+        datum.input = features;
+        return datum;
+      }, this);
+
+      async.each(dataset, function(datum) {
+        this.editFeatureValues(datum.input, /*remove_unknown_features=*/false);
+        if (featureLookupTable)
+          datum.input = featureLookupTable.hashToArray(datum.input);
+        datum.input = this.compressData(datum.input);
+      }.bind(this), this);
 
 
-		this.classifier.trainBatch(dataset);
+      this.classifier.trainBatch(dataset);
+    }.bind(this),0);
+
 	},
   compressData: function (dat) {
     var last = dat[0];
