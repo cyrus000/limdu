@@ -30,7 +30,6 @@ function SvmLinear(opts) {
 }
 
 SvmLinear.isInstalled = function() {
-  console.log(process.cwd());
 	var result = execSync(process.cwd() + "/liblinear_train");
 	return (result.code!=127);
 }
