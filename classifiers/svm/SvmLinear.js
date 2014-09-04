@@ -30,7 +30,7 @@ function SvmLinear(opts) {
 }
 
 SvmLinear.isInstalled = function() {
-	var result = execSync("liblinear_train");
+	var result = execSync("./liblinear_train");
 	return (result.code!=127);
 }
 
@@ -66,7 +66,7 @@ SvmLinear.prototype = {
 					dataset, this.bias, /*binarize=*/false, this.model_file_prefix, "SvmLinear", FIRST_FEATURE_NUMBER);
 			var modelFile = learnFile.replace(/[.]learn/,".model");
 
-			var command = "liblinear_train "+this.learn_args+" "+learnFile + " "+modelFile;
+			var command = "./liblinear_train "+this.learn_args+" "+learnFile + " "+modelFile;
 			if (this.debug) console.log("running "+command);
 
 			var result = execSync(command);
