@@ -1,3 +1,4 @@
+
 /**
  * Static utility function for training and testing classifiers.
  * 
@@ -11,7 +12,7 @@ var utils = require('./bars');
 var hash = require('./hash');
 var PrecisionRecall = require("./PrecisionRecall");
 var list = require('./list');
-var execSync = require('execSync')
+var execSync = require('child_process').execSync
 var util = require('../utils/bars');
 
 

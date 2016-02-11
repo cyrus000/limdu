@@ -11,7 +11,7 @@
 
 	@author Vasily Konovalov
  */
-var execSync = require('execSync')
+var execSync = require('child_process').execSync
 var _ = require('underscore')._;
 var fs = require('fs');
 var multilabelutils = require('../classifiers/multilabel/multilabelutils');

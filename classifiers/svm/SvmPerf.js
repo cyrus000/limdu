@@ -17,8 +17,7 @@
 
 var fs   = require('fs')
   , util  = require('util')
-  , execSync = require('execSync').exec
-  , exec = require('child_process').exec
+  , execSync = require('child_process').execSync
   , svmcommon = require('./svmcommon')
   ;
 

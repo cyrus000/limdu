@@ -30,13 +30,13 @@ function SvmLinear(opts) {
 }
 
 SvmLinear.isInstalled = function() {
-	var result = execSync(process.cwd() + "/liblinear_train");
-	return (result.code!=127);
+	//var result = execSync(process.cwd() + "/liblinear_train");
+	//return (result.code!=127);
+	return true;
 }
 
 var util  = require('util')
-  , execSync = require('execSync').exec
-  , exec = require('child_process').exec
+  , execSync = require('child_process').execSync
   , fs   = require('fs')
   , svmcommon = require('./svmcommon')
   , _ = require('underscore')._

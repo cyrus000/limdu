@@ -3,9 +3,8 @@ var sprintf = require("sprintf").sprintf;
 var _ = require("underscore")._;
 var fs = require('fs');
 var partitions = require('../../utils/partitions');
-var execSync = require('execSync')
+var execSync = require('child_process').execSync;
 var crypto = require('crypto')
-var execSync = require('execSync').exec
 
 /**
  * Adaptive Boosting (Adaboost) is a greedy search for a linear combination of 
