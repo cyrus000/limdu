@@ -1,7 +1,6 @@
 module.exports = {
 	// basic classifiers:
 	//NeuralNetwork: require('./brain/lib/neuralnetwork').NeuralNetwork,
-	NeuralNetwork: require('./neural/NeuralNetwork'),
 	Bayesian: require('./bayesian/bayesian'),
 
 	SvmJs: require('./svm/SvmJs'),
